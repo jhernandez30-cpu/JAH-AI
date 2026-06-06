@@ -48,6 +48,13 @@ app = FastAPI(
     version="0.1.0",
 )
 
+PRODUCTION_FRONTEND_ORIGINS = [
+    "https://jah-ai.vercel.app",
+]
+
+ODYSSEUS_ROUTER_AVAILABLE = False
+ODYSSEUS_ROUTER_ERROR = ""
+
 
 def _csv_env(name: str) -> list[str]:
     raw = os.getenv(name, "")
@@ -68,6 +75,8 @@ def _cors_allowed_origins() -> list[str]:
     frontend_url = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
     if frontend_url:
         origins.append(frontend_url)
+    if _runtime_environment() == "production":
+        origins.extend(PRODUCTION_FRONTEND_ORIGINS)
     if _runtime_environment() != "production":
         origins.extend(
             [
@@ -98,9 +107,9 @@ try:
     # Import the APIRouter object explicitly from the odysseus submodule
     from .odysseus.router import router as odysseus_router
     app.include_router(odysseus_router)
-except Exception:
-    # If adapter not available, skip silently
-    pass
+    ODYSSEUS_ROUTER_AVAILABLE = True
+except Exception as exc:
+    ODYSSEUS_ROUTER_ERROR = str(exc)[:200]
 
 
 # Backwards-compatible upload endpoint used by some frontends / integrations.
@@ -629,10 +638,62 @@ def _store_chat_history_if_needed(payload: dict[str, Any], result: dict[str, Any
     save_chat_history(int(user["id"]), message, answer)
 
 
+@app.get("/")
+async def root() -> dict[str, Any]:
+    return {
+        "ok": True,
+        "service": "jah-ai-bridge",
+        "message": "JAH AI Bridge disponible. Usa /api/health para estado y /docs para OpenAPI.",
+        "health": "/api/health",
+        "docs": "/docs",
+    }
+
+
 @app.get("/api/health")
 @app.get("/health")
 async def health() -> dict[str, Any]:
     return _health_payload()
+
+
+if not ODYSSEUS_ROUTER_AVAILABLE:
+    def _odysseus_unavailable_payload() -> dict[str, Any]:
+        return {
+            "ok": False,
+            "success": False,
+            "odysseus": "unavailable",
+            "safe_mode": True,
+            "code": "ODYSSEUS_ROUTER_UNAVAILABLE",
+            "message": "Motor avanzado no disponible en este despliegue. Revisa dependencias, imports y logs de Railway.",
+            "error": _safe_health_error(ODYSSEUS_ROUTER_ERROR),
+            "llm": get_orchestrator().status(),
+        }
+
+    @app.get("/api/odysseus/status")
+    async def odysseus_fallback_status() -> dict[str, Any]:
+        return _odysseus_unavailable_payload()
+
+    @app.post("/api/odysseus/analyze")
+    @app.post("/api/odysseus/code")
+    @app.post("/api/odysseus/debug")
+    @app.post("/api/odysseus/plan")
+    async def odysseus_fallback_action(payload: dict[str, Any]) -> dict[str, Any]:
+        return {
+            **_odysseus_unavailable_payload(),
+            "action": "unavailable",
+            "received": bool(payload),
+        }
+
+    @app.get("/api/odysseus/files/list")
+    async def odysseus_fallback_files_list() -> dict[str, Any]:
+        return {**_odysseus_unavailable_payload(), "files": []}
+
+    @app.post("/api/odysseus/files/search")
+    async def odysseus_fallback_files_search(payload: dict[str, Any]) -> dict[str, Any]:
+        return {**_odysseus_unavailable_payload(), "query": payload.get("query"), "files": []}
+
+    @app.post("/api/odysseus/files/read")
+    async def odysseus_fallback_files_read(payload: dict[str, Any]) -> dict[str, Any]:
+        return {**_odysseus_unavailable_payload(), "path": payload.get("path"), "content": ""}
 
 
 @app.get("/api/status")

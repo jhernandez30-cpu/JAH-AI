@@ -29,11 +29,10 @@ except Exception:  # pragma: no cover
 
 
 _ENVIRONMENT = (os.getenv("ENVIRONMENT") or os.getenv("RAILWAY_ENVIRONMENT") or "development").strip().lower()
-JWT_SECRET = os.getenv("TUTOR_IA_JWT_SECRET")
+JWT_SECRET = (os.getenv("TUTOR_IA_JWT_SECRET") or "").strip()
+JWT_SECRET_CONFIGURED = bool(JWT_SECRET)
 if not JWT_SECRET:
-    if _ENVIRONMENT == "production":
-        raise RuntimeError("TUTOR_IA_JWT_SECRET es obligatorio en produccion.")
-    JWT_SECRET = "local-dev-token-key-jah-ai"
+    JWT_SECRET = "local-dev-token-key-jah-ai" if _ENVIRONMENT != "production" else "unconfigured-production-token-key-jah-ai"
 JWT_ALGORITHM = os.getenv("TUTOR_IA_JWT_ALGORITHM", "HS256")
 JWT_EXPIRES_MINUTES = int(os.getenv("TUTOR_IA_JWT_EXPIRES_MINUTES", str(60 * 24 * 7)))
 JWT_ISSUER = os.getenv("TUTOR_IA_JWT_ISSUER", "tutor_ia")
@@ -99,7 +98,16 @@ def _fallback_decode(token: str) -> dict[str, Any]:
     return payload
 
 
+def _require_jwt_secret() -> None:
+    if _ENVIRONMENT == "production" and not JWT_SECRET_CONFIGURED:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Autenticacion local no configurada. Define TUTOR_IA_JWT_SECRET en Railway o usa Supabase Auth.",
+        )
+
+
 def create_access_token(user: dict[str, Any]) -> str:
+    _require_jwt_secret()
     now = datetime.now(timezone.utc)
     expires = now + timedelta(minutes=JWT_EXPIRES_MINUTES)
     payload = {
@@ -115,6 +123,7 @@ def create_access_token(user: dict[str, Any]) -> str:
 
 
 def decode_access_token(token: str) -> dict[str, Any]:
+    _require_jwt_secret()
     try:
         if jwt:
             payload = jwt.decode(

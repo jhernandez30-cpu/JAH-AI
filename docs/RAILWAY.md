@@ -10,8 +10,8 @@ Variables principales:
 
 ```env
 ENVIRONMENT=production
-FRONTEND_URL=https://TU-FRONTEND-VERCEL.vercel.app
-CORS_ALLOWED_ORIGINS=https://TU-FRONTEND-VERCEL.vercel.app
+FRONTEND_URL=https://jah-ai.vercel.app
+CORS_ALLOWED_ORIGINS=https://jah-ai.vercel.app
 SUPABASE_URL=
 SUPABASE_ANON_KEY=
 DATABASE_URL=
@@ -25,6 +25,8 @@ MODEL_NAME=
 OPENAI_API_KEY=
 GEMINI_API_KEY=
 OLLAMA_BASE_URL=
+AI_GATEWAY_API_KEY=
+AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1
 ```
 
 `SUPABASE_SERVICE_ROLE_KEY` es opcional y solo debe existir en Railway, nunca en frontend.
@@ -34,5 +36,8 @@ Antes de configurar `SUPABASE_URL`, `SUPABASE_ANON_KEY` y `DATABASE_URL`, ejecut
 Prueba:
 
 ```powershell
-Invoke-RestMethod https://TU-SERVICIO-RAILWAY.up.railway.app/api/health
+Invoke-RestMethod https://jah-ai-bridge-production.up.railway.app/api/health
+curl.exe -i -X OPTIONS "https://jah-ai-bridge-production.up.railway.app/api/health" -H "Origin: https://jah-ai.vercel.app" -H "Access-Control-Request-Method: GET"
 ```
+
+El preflight debe responder `access-control-allow-origin: https://jah-ai.vercel.app`. Si devuelve `Disallowed CORS origin`, el servicio desplegado no tiene `FRONTEND_URL`/`CORS_ALLOWED_ORIGINS` correctos o Railway esta ejecutando una version anterior.

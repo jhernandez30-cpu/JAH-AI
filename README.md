@@ -54,6 +54,13 @@ http://127.0.0.1:5500/asistente-programacion.html
 
 `frontend/index.html` redirige a `asistente-programacion.html`.
 
+## Produccion
+
+- Frontend Vercel: `https://jah-ai.vercel.app`
+- Backend Railway: `https://jah-ai-bridge-production.up.railway.app`
+
+El frontend en produccion debe consultar Railway por HTTPS. No debe llamar a `localhost`, `127.0.0.1` ni a GitHub Pages como backend.
+
 ## Backend Local
 
 ```powershell
@@ -98,13 +105,15 @@ SUPABASE_GOOGLE_ENABLED=true
 SUPABASE_APPLE_ENABLED=true
 OWNER_EMAIL=josuea.hernandezg@gmail.com
 ADMIN_EMAILS=josuea.hernandezg@gmail.com
-FRONTEND_URL=https://TU-FRONTEND-VERCEL.vercel.app
-CORS_ALLOWED_ORIGINS=https://TU-FRONTEND-VERCEL.vercel.app
+FRONTEND_URL=https://jah-ai.vercel.app
+CORS_ALLOWED_ORIGINS=https://jah-ai.vercel.app
 MODEL_PROVIDER=
 MODEL_NAME=
 OPENAI_API_KEY=
 GEMINI_API_KEY=
 OLLAMA_BASE_URL=
+AI_GATEWAY_API_KEY=
+AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1
 ```
 
 Opcional backend solamente:

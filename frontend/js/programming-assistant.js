@@ -1527,11 +1527,14 @@ document.addEventListener('DOMContentLoaded', () => {
       lastSystemHealth = {
         ok: false,
         backendActive: false,
-        tutorReady: false,
+        backendReachable: false,
+        tutorReady: null,
         tutorStatus: 'BACKEND_UNAVAILABLE',
-        supabaseConfigured: false,
-        databaseConnected: false,
-        databaseConfigured: false,
+        odysseusReady: null,
+        llmConfigured: null,
+        supabaseConfigured: null,
+        databaseConnected: null,
+        databaseConfigured: null,
         httpStatus: 0,
         apiBaseUrl: 'API_BASE_URL no configurada',
         errorType: 'config',
@@ -1560,15 +1563,20 @@ document.addEventListener('DOMContentLoaded', () => {
       lastSystemHealth = {
         ok: false,
         backendActive: false,
-        tutorReady: false,
+        backendReachable: false,
+        tutorReady: null,
         tutorStatus: 'BACKEND_UNAVAILABLE',
-        supabaseConfigured: false,
-        databaseConnected: false,
-        databaseConfigured: false,
+        odysseusReady: null,
+        llmConfigured: null,
+        supabaseConfigured: null,
+        databaseConnected: null,
+        databaseConfigured: null,
         httpStatus: 0,
         apiBaseUrl: bridgeUrl,
         errorType: isCorsOrConnection ? 'cors_or_connection' : 'connection',
-        message: isCorsOrConnection ? 'Error CORS o conexion rechazada' : (error.message || 'Error de conexion')
+        message: isCorsOrConnection
+          ? 'Backend Railway no disponible. Revisa deploy, logs o CORS.'
+          : (error.message || 'Error de conexion')
       };
       setBrainStatus('error', 'Backend no disponible');
       return lastSystemHealth;
@@ -1577,31 +1585,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderSystemStatus(status) {
     const raw = status.raw || {};
+    const backendActive = Boolean(status.backendActive);
+    const llmState = backendActive ? (status.llmConfigured ? true : 'warn') : null;
+    const supabaseState = backendActive ? (status.supabaseConfigured ? true : 'warn') : null;
+    const databaseState = backendActive ? (status.databaseConnected ? true : 'warn') : null;
     return `
       <div class="assistant-status-grid">
         <div class="assistant-status-item">
           <span>Backend</span>
-          ${renderStatusBadge(status.backendActive, 'Activo', 'No disponible')}
+          ${renderStatusBadge(backendActive, 'Disponible', 'No disponible')}
         </div>
         <div class="assistant-status-item">
           <span>tutor_ia</span>
-          ${renderStatusBadge(status.tutorReady ? true : status.backendActive ? 'warn' : false, 'Listo', tutorConnectionStateLabel(status.tutorStatus))}
+          ${renderStatusBadge(status.tutorReady === null ? null : status.tutorReady ? true : backendActive ? 'warn' : false, 'Disponible', tutorConnectionStateLabel(status.tutorStatus))}
         </div>
         <div class="assistant-status-item">
           <span>Motor avanzado</span>
-          ${renderStatusBadge(status.odysseusReady ? true : status.backendActive ? 'warn' : false, 'Listo', 'No disponible')}
+          ${renderStatusBadge(status.odysseusReady === null ? null : status.odysseusReady ? true : backendActive ? 'warn' : false, 'Disponible', 'No disponible')}
         </div>
         <div class="assistant-status-item">
           <span>LLM</span>
-          ${renderStatusBadge(status.llmConfigured ? true : 'warn', status.llmProvider || 'Configurado', 'No configurado')}
+          ${renderStatusBadge(llmState, status.llmProvider || 'Configurado', 'No configurado')}
         </div>
         <div class="assistant-status-item">
           <span>Supabase Auth</span>
-          ${renderStatusBadge(status.supabaseConfigured ? true : 'warn', 'Configurado', 'No configurado')}
+          ${renderStatusBadge(supabaseState, 'Configurado', 'No configurado')}
         </div>
         <div class="assistant-status-item">
           <span>Base de datos</span>
-          ${renderStatusBadge(status.databaseConnected ? true : 'warn', 'Conectada', status.databaseConfigured ? 'Configurada sin conexion' : 'No configurada')}
+          ${renderStatusBadge(databaseState, 'Conectada', status.databaseConfigured ? 'Configurada sin conexion' : 'No configurada')}
         </div>
       </div>
       <div class="assistant-panel-card">

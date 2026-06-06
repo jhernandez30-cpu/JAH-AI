@@ -31,8 +31,8 @@ Variables adicionales de backend:
 
 ```env
 ENVIRONMENT=production
-FRONTEND_URL=https://TU-FRONTEND-VERCEL.vercel.app
-CORS_ALLOWED_ORIGINS=https://TU-FRONTEND-VERCEL.vercel.app
+FRONTEND_URL=https://jah-ai.vercel.app
+CORS_ALLOWED_ORIGINS=https://jah-ai.vercel.app
 OWNER_EMAIL=josuea.hernandezg@gmail.com
 ADMIN_EMAILS=josuea.hernandezg@gmail.com
 TUTOR_IA_JWT_SECRET=
@@ -41,6 +41,8 @@ MODEL_NAME=
 OPENAI_API_KEY=
 GEMINI_API_KEY=
 OLLAMA_BASE_URL=
+AI_GATEWAY_API_KEY=
+AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1
 ```
 
 `SUPABASE_SERVICE_ROLE_KEY` es opcional y solo puede existir en Railway/backend. No debe ponerse en Vercel, HTML ni JavaScript.
@@ -52,17 +54,10 @@ En Supabase ve a `Authentication > URL Configuration`.
 Configura `Site URL`:
 
 ```text
-https://TU-FRONTEND-VERCEL.vercel.app
+https://jah-ai.vercel.app
 ```
 
 Agrega en `Redirect URLs`:
-
-```text
-https://TU-FRONTEND-VERCEL.vercel.app
-https://TU-FRONTEND-VERCEL.vercel.app/asistente-programacion.html
-```
-
-Si usas el despliegue actual de Vercel, reemplaza el placeholder por:
 
 ```text
 https://jah-ai.vercel.app
@@ -99,7 +94,7 @@ Despues de cambiar variables en Railway, haz redeploy del servicio `jah-ai-bridg
 Valida:
 
 ```powershell
-Invoke-RestMethod https://TU-SERVICIO-RAILWAY.up.railway.app/api/health
+Invoke-RestMethod https://jah-ai-bridge-production.up.railway.app/api/health
 ```
 
 Esperado:
