@@ -42,6 +42,8 @@ desktop.ini
 .vscode/settings.json
 .idea/
 .vs/
+.vercel/
+**/.vercel/
 
 # Temporary and generated files
 *.tmp
