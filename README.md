@@ -6,28 +6,30 @@ JAH AI es un asistente de programacion con frontend estatico, backend FastAPI, a
 
 ```text
 JAH AI/
-├── frontend/
-│   ├── index.html
-│   ├── asistente-programacion.html
-│   ├── css/
-│   ├── js/
-│   ├── assets/brand/
-│   ├── manifest.webmanifest
-│   └── vercel.json
-├── backend/
-│   ├── backend/
-│   │   ├── main.py
-│   │   ├── odysseus/
-│   │   ├── rag/
-│   │   └── services/
-│   ├── odysseus-src/
-│   ├── requirements.txt
-│   ├── railway.toml
-│   ├── Procfile
-│   └── .env.example
-├── docs/
-├── README.md
-└── .gitignore
+|-- frontend/
+|   |-- index.html
+|   |-- asistente-programacion.html
+|   |-- css/
+|   |-- js/
+|   |-- assets/brand/
+|   |-- manifest.webmanifest
+|   `-- vercel.json
+|-- backend/
+|   |-- backend/
+|   |   |-- main.py
+|   |   |-- odysseus/
+|   |   |-- rag/
+|   |   `-- services/
+|   |-- odysseus-src/
+|   |-- requirements.txt
+|   |-- railway.toml
+|   |-- Procfile
+|   `-- .env.example
+|-- supabase/
+|   `-- schema.sql
+|-- docs/
+|-- README.md
+`-- .gitignore
 ```
 
 ## Identidad
@@ -117,6 +119,31 @@ No subir `.env` real ni secretos.
 
 Ver [docs/SUPABASE.md](docs/SUPABASE.md).
 
+## Supabase Setup
+
+JAH AI no usa la tabla demo `notes` como base del proyecto. La estructura real de Supabase esta en `supabase/schema.sql` e incluye:
+
+- `profiles`
+- `spaces`
+- `projects`
+- `chats`
+- `messages`
+- `uploaded_files`
+- `user_settings`
+
+Pasos:
+
+1. Abrir Supabase SQL Editor.
+2. Ejecutar completo `supabase/schema.sql`.
+3. Confirmar que RLS esta activo y que las politicas usan `auth.uid()`.
+4. Copiar `SUPABASE_URL`, `SUPABASE_ANON_KEY` y `DATABASE_URL`.
+5. Pegar esas variables en Railway, no en el repo.
+6. Configurar Auth Site URL y Redirect URLs con la URL final de Vercel.
+7. Activar Google/Apple providers solo si se usaran.
+8. Hacer redeploy de Railway despues de cambiar variables.
+
+No subir `.env` real, no poner secretos en frontend y nunca usar `SUPABASE_SERVICE_ROLE_KEY` en HTML, CSS, JS ni Vercel publico.
+
 ## Endpoints
 
 ```text
@@ -167,11 +194,10 @@ Invoke-RestMethod http://127.0.0.1:8787/api/health
 Invoke-RestMethod http://127.0.0.1:8787/api/odysseus/status
 ```
 
-## Pendientes Externos
+## Pasos Externos Reales
 
-- URL final de Vercel.
-- URL final de Railway si cambia.
 - Credenciales Supabase reales.
 - `DATABASE_URL` real.
 - Configuracion Google/Apple OAuth.
+- Variables reales en Railway.
 - Proveedor IA final si se usara una API externa.

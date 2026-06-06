@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -209,6 +210,20 @@ def _env_configured(*names: str) -> bool:
     return all(bool(os.getenv(name, "").strip()) for name in names)
 
 
+def _safe_health_error(error: str) -> str:
+    redacted = re.sub(
+        r"(?i)(postgres(?:ql)?://[^:\s]+:)([^@\s]+)(@)",
+        r"\1[redacted]\3",
+        str(error or ""),
+    )
+    redacted = re.sub(
+        r"(?i)\b(api[_-]?key|token|secret|password)=([^&\s]+)",
+        r"\1=[redacted]",
+        redacted,
+    )
+    return redacted[:200]
+
+
 def _database_state() -> tuple[str, bool, bool, str]:
     """Return (label, configured, connected, error_message).
 
@@ -305,7 +320,7 @@ def _health_payload() -> dict[str, Any]:
     }
     # Only include db_error when present (avoid leaking connection strings)
     if db_error:
-        payload["database_error"] = db_error[:200]
+        payload["database_error"] = _safe_health_error(db_error)
     return payload
 
 
