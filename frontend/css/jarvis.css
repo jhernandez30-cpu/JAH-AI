@@ -1,0 +1,139 @@
+.composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.jarvis-voice-btn {
+  flex: 0 0 auto;
+  min-width: 38px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid #27251e;
+  background: #27251e;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+
+.jarvis-voice-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(39, 37, 30, 0.16);
+}
+
+.jarvis-voice-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.jarvis-voice-btn:active {
+  transform: scale(0.97);
+}
+
+.jarvis-voice-btn.listening {
+  border-color: #ef4444;
+  background: #ef4444;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.2);
+  animation: jarvisPulse 1.2s infinite;
+}
+
+.jarvis-voice-btn.error {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.jarvis-voice-btn.jarvis-disabled {
+  opacity: 0.58;
+  box-shadow: none;
+}
+
+.jarvis-voice-btn[disabled] {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.jarvis-voice-btn[disabled]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.jarvis-status {
+  min-height: 18px;
+  display: block;
+  width: 100%;
+  margin-top: -2px;
+  padding: 0 2px;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jarvis-status.info {
+  color: #2563eb;
+}
+
+.jarvis-status.success {
+  color: #16a34a;
+}
+
+.jarvis-status.warning {
+  color: #ca8a04;
+}
+
+.jarvis-status.error {
+  color: #dc2626;
+}
+
+@keyframes jarvisPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+@media (max-width: 430px) {
+  .composer-actions {
+    align-self: flex-end;
+  }
+
+  .jarvis-voice-label {
+    display: none;
+  }
+
+  .jarvis-voice-btn {
+    min-width: 38px;
+    width: 38px;
+    padding: 0;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "jah-ai-frontend-tests",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "playwright": "^1.35.0"
+  },
+  "scripts": {
+    "test:ui": "npx playwright test",
+    "test:ui:headed": "npx playwright test --headed",
+    "test:ui:debug": "npx playwright test --debug"
+  }
+}

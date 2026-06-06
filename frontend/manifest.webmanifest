@@ -1,0 +1,24 @@
+{
+  "name": "JAH AI",
+  "short_name": "JAH AI",
+  "description": "Asistente de programacion JAH AI conectado a tutor_ia.",
+  "start_url": "/asistente-programacion.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#faf8f5",
+  "icons": [
+    {
+      "src": "./assets/brand/jah-ai-logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/brand/jah-ai-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

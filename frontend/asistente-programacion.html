@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAH AI | Abraham Hernández</title>
+  <meta name="description" content="JAH AI es el asistente de programación conectado al backend TUTOR_IA para resolver dudas, analizar archivos y guardar historial.">
+  <meta name="keywords" content="JAH AI, asistente de programación, chat IA, TUTOR_IA, tutor de programación, Abraham Hernández">
+  <meta name="relative-base" content="">
+  <link rel="canonical" href="./asistente-programacion.html">
+  <meta name="author" content="Abraham Hernández">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#faf8f5">
+  <meta name="application-name" content="JAH AI">
+  <!-- local se detecta en localhost/file; produccion usa jah-api-base-url o js/app-config.production.js -->
+  <meta name="jah-run-mode" content="">
+  <meta name="jah-api-base-url" content="https://jah-ai-bridge-production.up.railway.app">
+  <meta name="supabase-url" content="">
+  <meta name="supabase-anon-key" content="">
+  <meta name="supabase-google-enabled" content="false">
+  <meta name="supabase-apple-enabled" content="false">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="JAH AI">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/jah-ai-logo-32.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/programming-assistant.css?v=actions-20260525">
+  <link rel="stylesheet" href="css/jarvis.css">
+</head>
+<body class="programming-app-page">
+  <div id="appSplash" class="app-splash" aria-hidden="true">
+    <img src="./assets/brand/jah-ai-logo-transparent.png" alt="" class="app-splash-logo" width="96" height="96">
+  </div>
+
+  <header>
+    <nav class="navbar" id="navbar">
+      <div class="logo">
+        <a href="asistente-programacion.html" class="brand-link" aria-label="Inicio JAH AI">
+          <img src="./assets/brand/jah-ai-logo-transparent.png" alt="JAH AI" class="brand-logo" width="40" height="40" loading="eager" decoding="async">
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="asistente-programacion.html" class="nav-link">Inicio</a>
+        <a href="asistente-programacion.html" class="nav-link active">Asistente</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="custom-cursor" aria-hidden="true"></div>
+
+  <main class="programming-shell">
+    <section class="chat-app" aria-label="Chat de programación con JAH AI y TUTOR_IA">
+      <aside class="chat-sidebar" id="chatSidebar" aria-label="Historial de conversaciones">
+        <div class="sidebar-mobile-row">
+          <button id="closeSidebarBtn" class="sidebar-icon" type="button" aria-label="Cerrar historial" title="Cerrar historial">
+            <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-brand" aria-label="JAH AI">
+          <button class="sidebar-menu-mark" type="button" aria-label="Menu" title="Menu">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+          </button>
+          <img src="./assets/brand/jah-ai-logo-transparent.png" alt="JAH AI" class="brand-logo sidebar-brand-logo" width="40" height="40" loading="eager" decoding="async">
+          <span>JAH AI</span>
+        </div>
+
+        <button id="openSearchBtn" class="chat-search sidebar-nav-item" type="button" data-action="search" aria-label="Buscar en JAH AI" title="Buscar en conversaciones, proyectos y espacios">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <span>Buscar</span>
+        </button>
+
+        <button class="brain-status sidebar-nav-item" id="brainStatus" type="button" data-state="checking" data-action="system-status" aria-label="Abrir estado del sistema" title="Abrir estado del sistema">
+          <span class="brain-status-dot" aria-hidden="true"></span>
+          <strong id="brainStatusText">Estado del sistema</strong>
+        </button>
+
+        <nav class="sidebar-nav" aria-label="Navegación de JAH AI">
+          <button id="newChatBtn" class="sidebar-nav-item sidebar-action" type="button" data-action="new-chat" aria-label="Crear nuevo chat" title="Crear nuevo chat">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <span>Nuevo chat</span>
+          </button>
+          <button id="historyPanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="history" aria-label="Abrir historial" title="Abrir historial">
+            <i class="fas fa-message" aria-hidden="true"></i>
+            <span>Chats</span>
+            <i class="fas fa-chevron-right sidebar-caret" aria-hidden="true"></i>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="more" aria-label="Abrir correo" title="Correo">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            <span>Correo</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="odysseus" aria-label="Abrir herramientas" title="Herramientas">
+            <i class="fas fa-screwdriver-wrench" aria-hidden="true"></i>
+            <span>Herramientas</span>
+            <i class="fas fa-chevron-down sidebar-caret" aria-hidden="true"></i>
+          </button>
+          <button id="discoverPanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="discover" aria-label="Abrir descubrir" title="Abrir prompts y capacidades">
+            <i class="fas fa-book-open" aria-hidden="true"></i>
+            <span>Recetario</span>
+          </button>
+          <button id="spacesPanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="spaces" aria-label="Abrir espacios" title="Organizar espacios de trabajo">
+            <i class="fas fa-calendar" aria-hidden="true"></i>
+            <span>Calendario</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="discover" aria-label="Comparar respuestas" title="Comparar">
+            <i class="fas fa-table-columns" aria-hidden="true"></i>
+            <span>Comparar</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="search" aria-label="Investigaci&oacute;n profunda" title="Investigaci&oacute;n profunda">
+            <i class="fas fa-magnifying-glass-chart" aria-hidden="true"></i>
+            <span>Investigaci&oacute;n profunda</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="projects" aria-label="Galer&iacute;a" title="Galer&iacute;a">
+            <i class="fas fa-image" aria-hidden="true"></i>
+            <span>Galer&iacute;a</span>
+          </button>
+          <button id="projectsPanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="projects" aria-label="Abrir proyectos" title="Organizar proyectos">
+            <i class="fas fa-square" aria-hidden="true"></i>
+            <span>Biblioteca</span>
+          </button>
+          <button id="securityPanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="security" aria-label="Abrir seguridad" title="Ver estado de seguridad">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <span>Seguridad</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="history" aria-label="Abrir notas" title="Notas">
+            <i class="fas fa-note-sticky" aria-hidden="true"></i>
+            <span>Notas</span>
+          </button>
+          <button class="sidebar-nav-item sidebar-ghost" type="button" data-action="projects" aria-label="Abrir tareas" title="Tareas">
+            <i class="fas fa-clipboard-check" aria-hidden="true"></i>
+            <span>Tareas</span>
+          </button>
+          <button id="morePanelBtn" class="sidebar-nav-item sidebar-ghost" type="button" data-action="settings" aria-label="Abrir tema" title="Tema">
+            <i class="fas fa-palette" aria-hidden="true"></i>
+            <span>Tema</span>
+          </button>
+        </nav>
+
+        <div class="history-heading">
+          <span>Historial</span>
+          <button id="clearHistoryBtn" type="button" data-action="clear-history" aria-label="Limpiar historial" title="Limpiar historial">Limpiar</button>
+        </div>
+
+        <div id="chatHistoryList" class="chat-history-list" aria-live="polite"></div>
+      </aside>
+
+      <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+
+      <section class="chat-main" aria-labelledby="assistantTitle">
+        <div class="chat-topbar">
+          <button id="openSidebarBtn" class="topbar-icon" type="button" aria-label="Abrir historial" title="Abrir historial">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+          </button>
+          <img src="./assets/brand/jah-ai-logo-transparent.png" alt="JAH AI" class="brand-logo topbar-brand-logo" width="40" height="40" loading="eager" decoding="async">
+          <div class="chat-title">
+            <strong>JAH AI</strong>
+            <span id="activeChatLabel">Nuevo chat</span>
+          </div>
+        </div>
+
+        <div id="assistantAuthArea" class="assistant-auth-bar" data-auth-state="checking">
+          <div id="guestAuthActions" class="guest-auth-actions" hidden>
+            <button id="openLoginBtn" class="auth-pill auth-pill-dark" type="button" aria-label="Iniciar sesion" title="Iniciar sesion">Iniciar sesi&oacute;n</button>
+            <button id="openRegisterBtn" class="auth-pill auth-pill-light" type="button" aria-label="Registrarse gratuitamente" title="Registrarse gratuitamente">Registrarse gratuitamente</button>
+          </div>
+
+          <div id="userAccountArea" class="user-account-area" hidden>
+            <button id="userMenuBtn" class="user-account-button" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Abrir menu de usuario" title="Abrir menu de usuario">
+              <span id="userAvatar" class="user-avatar" aria-hidden="true">U</span>
+              <span id="userDisplayName" class="user-display-name">Usuario</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+
+            <div id="userMenu" class="user-menu" role="menu" hidden>
+              <button type="button" role="menuitem" data-account-action="upgrade" aria-label="Ver plan actual" title="Ver plan actual">
+                <i class="fas fa-arrow-up-right-dots" aria-hidden="true"></i>
+                <span>Upgrade plan</span>
+              </button>
+              <button type="button" role="menuitem" data-account-action="personalization" aria-label="Abrir personalizacion" title="Abrir personalizacion">
+                <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
+                <span>Personalizaci&oacute;n</span>
+              </button>
+              <button type="button" role="menuitem" data-account-action="profile" aria-label="Abrir perfil" title="Abrir perfil">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>Perfil</span>
+              </button>
+              <button type="button" role="menuitem" data-account-action="settings" aria-label="Abrir ajustes" title="Abrir ajustes">
+                <i class="fas fa-gear" aria-hidden="true"></i>
+                <span>Configuraci&oacute;n</span>
+              </button>
+              <button type="button" role="menuitem" data-account-action="help" aria-label="Abrir ayuda" title="Abrir ayuda">
+                <i class="fas fa-circle-question" aria-hidden="true"></i>
+                <span>Ayuda</span>
+              </button>
+              <span class="user-menu-divider" aria-hidden="true"></span>
+              <button type="button" role="menuitem" data-account-action="logout" aria-label="Cerrar sesion" title="Cerrar sesion">
+                <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
+                <span>Cerrar sesi&oacute;n</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="coachMessages" class="chat-messages" aria-live="polite">
+          <div id="emptyChatState" class="empty-chat-state">
+            <img src="./assets/brand/jah-ai-logo-transparent.png" alt="JAH AI" class="brand-logo-large empty-state-logo" width="96" height="96" loading="eager" decoding="async">
+            <h1 id="assistantTitle">JAH AI</h1>
+            <p class="empty-state-subtitle">Tuyo para el viaje.</p>
+            <p class="empty-state-tip">Consejo: usa el men&uacute; lateral para buscar, subir archivos o activar herramientas.</p>
+            <span class="empty-state-privacy"><i class="fas fa-eye-slash" aria-hidden="true"></i> Privado</span>
+            <button id="loginSoftInvite" class="login-soft-invite" type="button" aria-label="Iniciar sesion para sincronizar" title="Iniciar sesion para sincronizar" hidden>Inicia sesi&oacute;n para guardar perfil, preferencias e historial entre dispositivos.</button>
+          </div>
+        </div>
+
+        <form id="coachForm" class="chat-composer" autocomplete="off" enctype="multipart/form-data">
+          <div class="composer-card">
+            <textarea id="coachInput" rows="1" placeholder="Mensaje a JAH AI" aria-label="Mensaje para JAH AI"></textarea>
+
+            <div id="attachmentPreview" class="attachment-preview" aria-live="polite" hidden></div>
+
+            <div id="jarvisStatus" class="jarvis-status" role="status" aria-live="polite"></div>
+
+            <div class="composer-toolbar">
+              <div class="composer-tools" aria-label="Herramientas del asistente">
+                <button id="tutorIABtn" class="tool-chip is-active" type="button" aria-label="Activar o desactivar pensamiento profundo" aria-pressed="true" title="Activar o desactivar pensamiento profundo" data-admin-only hidden>
+                  <i class="fas fa-brain" aria-hidden="true"></i>
+                  <span>Pensamiento profundo</span>
+                </button>
+
+                <button id="smartSearchBtn" class="tool-chip" type="button" aria-label="Activar busqueda inteligente" aria-pressed="false" title="Activar busqueda inteligente">
+                  <i class="fas fa-globe-americas" aria-hidden="true"></i>
+                  <span>B&uacute;squeda inteligente</span>
+                </button>
+
+                <label class="attach-chip" for="fileInput" aria-label="Subir archivos e imagenes">
+                  <i class="fas fa-paperclip" aria-hidden="true"></i>
+                </label>
+                <input id="fileInput" class="file-input" name="files" type="file" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,.docx,.txt,.md,.csv,.json,.zip,.py,.js,.jsx,.ts,.tsx,.html,.css,.scss,.sql,.cs,.java,.go,.rs,.php,.rb,.swift,.kt,.sh,.ps1,.yml,.yaml,.toml,image/png,image/jpeg,image/webp,application/pdf,text/plain,text/csv,application/zip">
+              </div>
+
+              <div class="composer-actions">
+                <div class="mode-toggle" aria-label="Modo de respuesta">
+                  <button class="mode-toggle-btn active" type="button" aria-pressed="true">Agente</button>
+                  <button class="mode-toggle-btn" type="button" aria-pressed="false">Chat</button>
+                </div>
+                <button id="jarvisVoiceBtn" class="jarvis-voice-btn" type="button" aria-label="Hablar con Jarvis" aria-pressed="false" title="Hablar con Jarvis">
+                  <i class="fas fa-microphone" aria-hidden="true"></i>
+                  <span class="jarvis-voice-label">Jarvis</span>
+                </button>
+
+                <button class="send-orb" type="submit" aria-label="Enviar mensaje" title="Enviar mensaje">
+                  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="quick-context-card" data-admin-only hidden aria-hidden="true">
+          <div class="quick-context-title">
+            <i class="fas fa-computer" aria-hidden="true"></i>
+            <span>Cerebro JAH AI</span>
+          </div>
+          <div class="quick-context-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="authOverlay" class="auth-overlay" hidden>
+    <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button id="closeAuthModalBtn" class="auth-close-btn" type="button" aria-label="Cerrar" title="Cerrar">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+      <div id="authModalContent" class="auth-modal-content"></div>
+    </section>
+  </div>
+
+  <div id="accountPanelOverlay" class="auth-overlay account-panel-overlay" hidden>
+    <section class="account-panel" role="dialog" aria-modal="true" aria-labelledby="accountPanelTitle">
+      <button id="closeAccountPanelBtn" class="auth-close-btn" type="button" aria-label="Cerrar" title="Cerrar">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+      <div id="accountPanelContent" class="account-panel-content"></div>
+    </section>
+  </div>
+
+  <div id="assistantPanelOverlay" class="assistant-panel-overlay" hidden>
+    <section id="assistantPanel" class="assistant-panel" role="dialog" aria-modal="true" aria-labelledby="assistantPanelTitle">
+      <header class="assistant-panel-header">
+        <img src="./assets/brand/jah-ai-logo-transparent.png" alt="JAH AI" class="brand-logo assistant-panel-brand-logo" width="48" height="48" loading="lazy" decoding="async">
+        <div>
+          <span id="assistantPanelKicker" class="assistant-panel-kicker">JAH AI</span>
+          <h2 id="assistantPanelTitle" class="assistant-panel-title">Panel</h2>
+          <p id="assistantPanelDescription" class="assistant-panel-description"></p>
+        </div>
+        <button id="closeAssistantPanelBtn" class="assistant-panel-close" type="button" aria-label="Cerrar panel" title="Cerrar panel">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </header>
+      <div id="assistantPanelContent" class="assistant-panel-content" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script src="js/app-config.js?v=auth-fix-20260520"></script>
+  <!-- Produccion: descomenta y crea js/app-config.production.js desde app-config.production.example.js -->
+  <!-- <script src="js/app-config.production.js?v=auth-prod-20260519"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/jarvis-assistant.js?v=mark-xxxix-20260511"></script>
+  <script src="js/odysseus.js" defer></script>
+  <script src="js/programming-assistant.js?v=actions-20260525"></script>
+  <script src="js/programming-auth.js?v=auth-fix-20260520"></script>
+</body>
+</html>

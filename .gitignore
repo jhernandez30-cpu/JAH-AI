@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+test-results/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and local process files
+*.log
+logs/
+*.pid
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/settings.json
+.idea/
+.vs/
+
+# Temporary and generated files
+*.tmp
+*.temp
+*.bak
+*.old
+*.backup
+*.sqlite
+*.db
+tmp/
+temp/
+tmp_openapi.json
+jah-ai-desktop.png
+jah-ai-mobile.png
+test_upload.txt
+
+# Runtime storage
+uploads/
+backend/uploads/
+backend/vectores/
+backend/backend/vectores/
+backend/backend/data/
+backend/database/
+
+# Local knowledge vaults should be mounted/provisioned outside Git.
+backend/conocimiento/
+
+# Secrets
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
